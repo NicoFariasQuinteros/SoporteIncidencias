@@ -28,62 +28,11 @@ public class Menu {
                     SoporteServicio sop1 = SoporteServicio.altaSoporte();
                     ConexionDB.altaSoporteDB(sop1);
                 case 4:
-<<<<<<< HEAD
-                    //*******Instancia un cliente nvo
-                    //lista de los soportes para que el cliente elija
-                    ConexionDB.listarSoporte();
-=======
                     ConexionDB.listarTecnicos();
->>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
 
             }
         } while (opcion > 5 || opcion < 1);
     }
-<<<<<<< HEAD
-
-    public static void subMenuEmpleados() {
-
-        int opciones_empleados = 0;
-        Scanner opcion_menu_empleados = new Scanner(System.in);
-        boolean bandera = false;
-        do {
-            do {
-                try {
-                    System.out.println("");
-                    System.out.println("1. Registrar empleado");
-                    System.out.println("2. Ver lista de empleados");
-                    System.out.println("3. Registrar técnico");
-                    System.out.println("4. Regresar menu principal");
-                    System.out.print("Indique la opcion: ");
-                    opciones_empleados = opcion_menu_empleados.nextInt();
-                } catch (InputMismatchException e) {
-                    bandera = true;
-                    opcion_menu_empleados.nextLine();
-                    System.out.println("Opcion no valida o inexistente");
-                    System.out.println("Por favor ingrese una opcion nuevamente");
-                }
-            }while(bandera == true);
-            switch (opciones_empleados) {
-                case 1:
-                    Empleado emp1 = Empleado.altaEmpleado();
-                    ConexionDB.altaEmpleadoDB(emp1);
-                    break;
-                case 2:
-                    ConexionDB.listarEmpleado();
-                    break;
-                case 3:
-                    Tecnico tec1 = Tecnico.altaTecnico();
-                    break;
-                case 4:
-                    menuPrincipal();
-                    break;
-                default:
-                    System.out.println("Opción no valida o inexistente");
-            }
-        } while (opciones_empleados != 4) ;
-    }
-}
-=======
     public static void subMenuEmpleados() {
 
             int opciones_empleados = 0;
@@ -138,7 +87,6 @@ public class Menu {
 
         // Otros métodos y clases aquí...
     }
->>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
 
 //**hacer un menu con opciones para: ABM cliente -- Repotar  Incidente--listar técnicos - salir
 //en un bucle que me permita seguier ejecutando hasta que seleccione salir/terminar

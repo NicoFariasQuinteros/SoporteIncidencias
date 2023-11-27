@@ -15,11 +15,7 @@ public class ConexionDB {
   public static Connection conexionDB() {
 	
 	try {
-<<<<<<< HEAD
-		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","");
-=======
-		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","123456");
->>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
+		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","user");
 		sT = conX.createStatement();	
 		return conX;
 		}
@@ -58,7 +54,7 @@ public class ConexionDB {
 			System.out.println("La DB/TABLA CLIENTE se actualizo con exito");
 			
 		} catch (SQLException obj) {
-			System.out.println("Error en el insert de la tabla Cliente"+ obj);
+			System.out.println("Error en el insert de la tabla cliente"+ obj);
 			obj.fillInStackTrace();
 		}
 	  
@@ -68,7 +64,7 @@ public class ConexionDB {
  public static void altaEmpleadoDB(Empleado emp1) {
      //validar que el cuit no exista
 	 
-    String consulta = "insert into Empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
+    String consulta = "insert into empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
  		+ ",celEmpleado,mailEmpleado,altaEmpleado,areaEmpleado) values (idEmpleado,?,?,?,?,?,?,?,?)";
 
 	
@@ -95,28 +91,6 @@ public class ConexionDB {
 }
 //******************LISTAR SOPORTE
 public static void listarEmpleado() {
-<<<<<<< HEAD
-
-	
-	String consulta = "select * from empleado";
-
-	ResultSet sql;
-	try {
-		sql = sT.executeQuery(consulta);
-		System.out.println("campos EMPELADO agregar y dejar bonito");
-	 	while (sql.next()) {
-		
-	 		System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+
-	 				"\t"+sql.getString(4)+sql.getString(5)+"\t"+sql.getString(6)+sql.getString(7)+"\t"+sql.getString(8));
-		
-	 	}
-		
-	} catch (SQLException e) {
-		System.out.println("Error en el select de la tabla EMPLEADO"+ e);
-		e.printStackTrace();
-	} 
-}	
-=======
 	String consulta = "SELECT * FROM empleado";
 
 	try {
@@ -144,12 +118,11 @@ public static void listarEmpleado() {
 	}
 }
 
->>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
  
 //*********************ALTA TECNICO
  public static void altaTecnicoDB(Tecnico tec1) {
  	 
- String consulta = "insert into Tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
+ String consulta = "insert into tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
 
 
  try {
@@ -168,18 +141,14 @@ public static void listarEmpleado() {
      System.out.println("La DB/TABLA TECNICO se actualizo con exito");
 
     } catch (SQLException obj) {
-       System.out.println("Error en el insert de la tabla Tecnico"+ obj);
+       System.out.println("Error en el insert de la tabla tecnico"+ obj);
           obj.fillInStackTrace();
        }
 
    }
-<<<<<<< HEAD
- 
- //*********validar cuit empleado
-=======
 	//******************LISTAR TECNICOS
 	public static void listarTecnicos() {
-		String consulta = "SELECT * FROM Tecnico";
+		String consulta = "SELECT * FROM tecnico";
 
 		try {
 			ResultSet sql = sT.executeQuery(consulta);
@@ -208,7 +177,6 @@ public static void listarEmpleado() {
 
 
 	//*********validar cuit empleado
->>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
  public static boolean validarCuitEmpleado(String cuitEmp) {
  String	consulta = String.format("select * from empleado where cuitEmpleado = %s",cuitEmp);	
 	ResultSet sql;
@@ -241,11 +209,8 @@ public static void listarEmpleado() {
 	}
 	return false;
 }
-<<<<<<< HEAD
- 
-=======
 	public static void buscarEmpleadoPorCuit(String cuit) {
-		String consulta = "SELECT * FROM Empleado WHERE cuitEmpleado = ?";
+		String consulta = "SELECT * FROM empleado WHERE cuitEmpleado = ?";
 
 		try {
 			PreparedStatement sql = conX.prepareStatement(consulta);
@@ -275,7 +240,6 @@ public static void listarEmpleado() {
 		}
 	}
 
->>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
  
  
 //****************ALTA SOPORTE
@@ -311,7 +275,7 @@ String consulta = "insert into soporte(idSoporte,codSoporte,tipoSoporte,desSopor
 public static void listarSoporte() {
 
 	
-	String consulta = "select * from SOPORTE";
+	String consulta = "select * from soporte";
 
 	ResultSet sql;
 	try {
