@@ -15,7 +15,11 @@ public class ConexionDB {
   public static Connection conexionDB() {
 	
 	try {
+<<<<<<< HEAD
 		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","");
+=======
+		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","123456");
+>>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
 		sT = conX.createStatement();	
 		return conX;
 		}
@@ -91,6 +95,7 @@ public class ConexionDB {
 }
 //******************LISTAR SOPORTE
 public static void listarEmpleado() {
+<<<<<<< HEAD
 
 	
 	String consulta = "select * from empleado";
@@ -111,6 +116,35 @@ public static void listarEmpleado() {
 		e.printStackTrace();
 	} 
 }	
+=======
+	String consulta = "SELECT * FROM empleado";
+
+	try {
+		ResultSet sql = sT.executeQuery(consulta);
+
+		System.out.println("---------------------------------------------------------------");
+		System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+				"ID", "Nombre", "Apellido", "Fecha Nac.", "Dirección", "Teléfono", "Correo", "Puesto");
+		System.out.println("---------------------------------------------------------------");
+
+		while (sql.next()) {
+			System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+					sql.getInt(1), sql.getString(2), sql.getString(3),
+					sql.getString(4), sql.getString(5), sql.getString(6),
+					sql.getString(7), sql.getString(8));
+		}
+
+		System.out.println("---------------------------------------------------------------");
+	} catch (SQLException e) {
+		System.out.println("Error en el select de la tabla EMPLEADO: " + e);
+		e.printStackTrace();
+	} finally {
+		// Llamada al método menuPrincipal() al final de la ejecución
+		Menu.menuPrincipal();
+	}
+}
+
+>>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
  
 //*********************ALTA TECNICO
  public static void altaTecnicoDB(Tecnico tec1) {
@@ -139,8 +173,42 @@ public static void listarEmpleado() {
        }
 
    }
+<<<<<<< HEAD
  
  //*********validar cuit empleado
+=======
+	//******************LISTAR TECNICOS
+	public static void listarTecnicos() {
+		String consulta = "SELECT * FROM Tecnico";
+
+		try {
+			ResultSet sql = sT.executeQuery(consulta);
+
+			System.out.println("---------------------------------------------------------------");
+			System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+					"ID", "Cuit Empleado", "Cod Soporte", "Titulo Técnico", "Disponibilidad", "Alta Técnico", "Estado Técnico");
+			System.out.println("---------------------------------------------------------------");
+
+			while (sql.next()) {
+				System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+						sql.getInt(1), sql.getString(2), sql.getString(3),
+						sql.getString(4), sql.getString(5), sql.getString(6),
+						sql.getString(7));
+			}
+
+			System.out.println("---------------------------------------------------------------");
+		} catch (SQLException e) {
+			System.out.println("Error en el select de la tabla TECNICO: " + e);
+			e.printStackTrace();
+		} finally {
+			// Llamada al método menuPrincipal() al final de la ejecución
+			Menu.menuPrincipal();
+		}
+	}
+
+
+	//*********validar cuit empleado
+>>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
  public static boolean validarCuitEmpleado(String cuitEmp) {
  String	consulta = String.format("select * from empleado where cuitEmpleado = %s",cuitEmp);	
 	ResultSet sql;
@@ -173,7 +241,41 @@ public static void listarEmpleado() {
 	}
 	return false;
 }
+<<<<<<< HEAD
  
+=======
+	public static void buscarEmpleadoPorCuit(String cuit) {
+		String consulta = "SELECT * FROM Empleado WHERE cuitEmpleado = ?";
+
+		try {
+			PreparedStatement sql = conX.prepareStatement(consulta);
+			sql.setString(1, cuit);
+
+			ResultSet result = sql.executeQuery();
+
+			if (result.next()) {
+				System.out.println("Datos del Empleado con CUIT " + cuit + ":");
+				System.out.println("ID: " + result.getInt("idEmpleado"));
+				System.out.println("Nombre: " + result.getString("nomEmpleado"));
+				System.out.println("Apellido: " + result.getString("apeEmpleado"));
+				System.out.println("Dirección: " + result.getString("direEmpleado"));
+				System.out.println("Teléfono: " + result.getString("celEmpleado"));
+				System.out.println("Correo: " + result.getString("mailEmpleado"));
+				System.out.println("Alta Empleado: " + result.getString("altaEmpleado"));
+				System.out.println("Área: " + result.getString("areaEmpleado"));
+			} else {
+				System.out.println("No se encontró ningún empleado con el CUIT: " + cuit);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error en la búsqueda de empleado por CUIT: " + e);
+			e.printStackTrace();
+		} finally {
+			// Llamada al método menuPrincipal() al final de la ejecución
+			Menu.menuPrincipal();
+		}
+	}
+
+>>>>>>> cdd3d38 (se agregan modificaciones al menu principal y al subMenuEmpleados)
  
  
 //****************ALTA SOPORTE
