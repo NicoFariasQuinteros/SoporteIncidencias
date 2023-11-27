@@ -52,7 +52,7 @@ public static Tecnico altaTecnico(){
 			
 		//System.out.println(tec1.toString());
 
-		entrada.close();
+		entrada.reset();
 		return tec1;
 	 	
 	 }	

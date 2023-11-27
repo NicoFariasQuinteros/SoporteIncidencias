@@ -92,10 +92,10 @@ public class Empleado {
 		
 		
 		Empleado emp1 = new Empleado(1,cuit,nom,ape,dire,cel,mail,area);
-		
+		entrada.reset();
 		//System.out.println(emp1.toString());
 
-		entrada.close();
+		//entrada.close();
 		return emp1;
  	
  }

@@ -46,7 +46,7 @@ public static SoporteServicio altaSoporte(){
 		
 	//System.out.println(sop1.toString());
 
-	entrada1.close();
+	entrada1.reset();
 	return sop1;
 }
 

@@ -54,7 +54,7 @@ public static Cliente altaCliente() {
 			
 		//System.out.println(cliente1.toString());
 
-		entrada.close();
+		entrada.reset();
 		return cliente1;
 		}
 

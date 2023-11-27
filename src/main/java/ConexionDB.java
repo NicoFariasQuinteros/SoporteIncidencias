@@ -15,7 +15,7 @@ public class ConexionDB {
   public static Connection conexionDB() {
 	
 	try {
-		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","");
+		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","user");
 		sT = conX.createStatement();	
 		return conX;
 		}
@@ -64,7 +64,7 @@ public class ConexionDB {
  public static void altaEmpleadoDB(Empleado emp1) {
      //validar que el cuit no exista
 	 
-    String consulta = "insert into Empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
+    String consulta = "insert into empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
  		+ ",celEmpleado,mailEmpleado,altaEmpleado,areaEmpleado) values (idEmpleado,?,?,?,?,?,?,?,?)";
 
 	
@@ -115,7 +115,7 @@ public static void listarEmpleado() {
 //*********************ALTA TECNICO
  public static void altaTecnicoDB(Tecnico tec1) {
  	 
- String consulta = "insert into Tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
+ String consulta = "insert into tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
 
 
  try {
@@ -209,7 +209,7 @@ String consulta = "insert into soporte(idSoporte,codSoporte,tipoSoporte,desSopor
 public static void listarSoporte() {
 
 	
-	String consulta = "select * from SOPORTE";
+	String consulta = "select * from soporte";
 
 	ResultSet sql;
 	try {
@@ -217,7 +217,7 @@ public static void listarSoporte() {
 		System.out.println("campos soporte agregar y dejar bonito");
 	 	while (sql.next()) {
 		
-	 		System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4)+sql.getString(5)+"\t"+sql.getString(6)+sql.getString(7)+"\t"+sql.getString(8));
+	 		System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4)+"\t"+sql.getString(5)+"\t"+sql.getString(6)+"\t"+sql.getString(7)+"\t"+sql.getString(8));
 		
 	 	}
 		
@@ -235,33 +235,33 @@ public static void listarSoporte() {
 public static void altaIncidenteDB(Incidente inc1) {
 
 	
-String consulta = "insert into incidente(idIncidente,idEmpleado,idCliente,idSoporte,idTecnico,altaIncidente,fechaResolucion,horaColchon,estadoIncidente)"
-		+ " values (idIncidente,?,?,?,?,?,?,?,?)";
-
-
-try {
-PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-
-sqlUp.setInt(1, inc1.getIdEmpleado());
-sqlUp.setInt(2, inc1.getIdCliente());
-sqlUp.setInt(3, inc1.getIdSoporte());
-sqlUp.setInt(4, inc1.getIdTecnico());
-sqlUp.setString(5,LocalDate.now().toString() );
-sqlUp.setString(6,inc1.getFechaResolucion());
-sqlUp.setString(7,inc1.getHorasColchon());
-sqlUp.setString(8,inc1.getEstadoIncidente());
-
-
-sqlUp.executeUpdate();
-
-System.out.println("La DB/TABLA INCIDENTE se actualizo con exito");
-
-} catch (SQLException obj) {
-System.out.println("Error en el insert de la tabla Incidente"+ obj);
-obj.fillInStackTrace();
-}
-
-}
+	String consulta = "insert into incidente(idIncidente,idEmpleado,idCliente,idSoporte,idTecnico,altaIncidente,fechaResolucion,horaColchon,estadoIncidente)"
+			+ " values (idIncidente,?,?,?,?,?,?,?,?)";
+	
+	
+	try {
+			PreparedStatement sqlUp = conX.prepareStatement(consulta);		
+			
+			sqlUp.setInt(1, inc1.getIdEmpleado());
+			sqlUp.setInt(2, inc1.getIdCliente());
+			sqlUp.setInt(3, inc1.getIdSoporte());
+			sqlUp.setInt(4, inc1.getIdTecnico());
+			sqlUp.setString(5,LocalDate.now().toString() );
+			sqlUp.setString(6,inc1.getFechaResolucion());
+			sqlUp.setString(7,inc1.getHorasColchon());
+			sqlUp.setString(8,inc1.getEstadoIncidente());
+			
+			
+			sqlUp.executeUpdate();
+			
+			System.out.println("La DB/TABLA INCIDENTE se actualizo con exito");
+			
+		} catch (SQLException obj) {
+			System.out.println("Error en el insert de la tabla Incidente"+ obj);
+			obj.fillInStackTrace();
+		}
+		
+	}
 
 
 
