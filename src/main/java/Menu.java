@@ -6,7 +6,7 @@ public class Menu {
     public static void menuPrincipal(){
         String opcion;
         Scanner opcion_menu = new Scanner(System.in);
-
+        
         do {
             System.out.println("******* Menu *******");
             System.out.println("Seleccione una opción:");
@@ -36,8 +36,8 @@ public class Menu {
                     break;
 
             }
-        } while (opcion != "5");
-        
+        } while (!opcion.equals("5"));
+        opcion_menu.close();
     }
     public static void subMenuEmpleados() {
 
@@ -80,7 +80,7 @@ public class Menu {
                     System.out.println("Opción no valida o inexistente");
                     }
                 
-                   } while (opciones_empleados != "4") ;
+                   } while (!opciones_empleados.equals("5")) ;
                 } catch (InputMismatchException e) {
                     System.out.println("Entrada inválida. Por favor, ingrese un número correspondiente a una opción.");
                 }
