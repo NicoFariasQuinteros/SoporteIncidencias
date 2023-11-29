@@ -17,43 +17,44 @@ public class Tecnico {
 	private String estadoTecnico;
 
 public static Tecnico altaTecnico(){
-		Scanner entrada = new Scanner(System.in);
-		System.out.println();
-		boolean valida= true;
-		String cuitEmp="";
-		
-		System.out.println("*****INGRESE LOS SIGUIENTES DATOS DEL TECNICO*****");
-	    System.out.println("***********RESPETANDO LAS INDICACIONES*************");		
-
-		while (valida) {
-			System.out.println("CUIT de OPERADOR: ");
-			cuitEmp = entrada.nextLine();	
-		
-			boolean existeEmpleado= ConexionDB.validarCuitEmpleado(cuitEmp);
-			if (!existeEmpleado) {
-				System.out.println("El OPERADOR no está dado de alta");
-			    valida = true;
-		       }
-			else
-				valida = false;
-		}
-		
-		System.out.println("CODIGO deL Soporte/Servicio (10 caract. max.): ");
-		String codSopo = entrada.nextLine();
-		System.out.println("TITULO/PROFESION/OFICIO: ");
-		String titulo = entrada.nextLine();
-		System.out.println("DISPONIBILIDAD 	horaria (FULL TIME/PART TIME): ");
-		String disponibilidad = entrada.nextLine();
-		System.out.println("ESTADO activo/inactivo: ");
-		String estado = entrada.nextLine();
-		
-		
-		Tecnico tec1 = new Tecnico(1,cuitEmp,codSopo,titulo,disponibilidad,estado);
+		try (Scanner entrada = new Scanner(System.in)) {
+			System.out.println();
+			boolean valida= true;
+			String cuitEmp="";
 			
-		//System.out.println(tec1.toString());
+			System.out.println("*****INGRESE LOS SIGUIENTES DATOS DEL TECNICO*****");
+			System.out.println("***********RESPETANDO LAS INDICACIONES*************");		
 
-		entrada.reset();
-		return tec1;
+			while (valida) {
+				System.out.println("CUIT de OPERADOR: ");
+				cuitEmp = entrada.nextLine();	
+			
+				boolean existeEmpleado= ConexionDB.validarCuitEmpleado(cuitEmp);
+				if (!existeEmpleado) {
+					System.out.println("El OPERADOR no está dado de alta");
+				    valida = true;
+			       }
+				else
+					valida = false;
+			}
+			
+			System.out.println("CODIGO deL Soporte/Servicio (10 caract. max.): ");
+			String codSopo = entrada.nextLine();
+			System.out.println("TITULO/PROFESION/OFICIO: ");
+			String titulo = entrada.nextLine();
+			System.out.println("DISPONIBILIDAD 	horaria (FULL TIME/PART TIME): ");
+			String disponibilidad = entrada.nextLine();
+			System.out.println("ESTADO activo/inactivo: ");
+			String estado = entrada.nextLine();
+			
+			
+			Tecnico tec1 = new Tecnico(1,cuitEmp,codSopo,titulo,disponibilidad,estado);
+				
+			//System.out.println(tec1.toString());
+
+			entrada.reset();
+			return tec1;
+		}
 	 	
 	 }	
 	

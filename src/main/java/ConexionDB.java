@@ -180,24 +180,17 @@ public static void listarEmpleado() {
  public static boolean validarCuitEmpleado(String cuitEmp) {
  String	consulta = String.format("select * from empleado where cuitEmpleado = %s",cuitEmp);	
 	ResultSet sql;
-	boolean resultado=false;
-
 	try {
 		sql = sT.executeQuery(consulta);
-		int id=0;
-		String nom=" ", ape=" ";
 		
 		while (sql.next()) {
-			
-			id = sql.getInt(1);
-			nom = sql.getString(3);
-			ape = sql.getString(4);
+
 			System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4));
 			if(sql.getRow()==0) { 
 				System.out.println("El empleado no existe, INGRESE OTRO CUIT");
-				return resultado = false;
+				return false;
 			}	
-			else return resultado = true;
+			else return true;
 				
 		}
 

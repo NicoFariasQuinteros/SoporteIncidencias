@@ -4,7 +4,6 @@ import java.util.Scanner;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -22,81 +21,82 @@ public class Empleado {
 	 String areaEmpleado; 
 
  public static Empleado altaEmpleado(){
-		Scanner entrada = new Scanner(System.in);
-		System.out.println();
-		boolean validaEntrada = true;
-		String cuit=" ", nom=" ",ape="",dire="",cel="",mail="",area="";
-		
-		System.out.println("*****INGRESE LOS SIGUIENTES DATOS DEL EMPLEADO*****");
-	    System.out.println("***********RESPETANDO LAS INDICACIONES*************");
-		while (validaEntrada) {
-		      System.out.println("Ingrese el CUIT/DNI del Empleado: ");
-		      cuit = entrada.next();
-		      if (cuit.isEmpty())
-		       validaEntrada=true;
-		      else validaEntrada=false;
-		}
-		validaEntrada=true;
-		while (validaEntrada) {
-			System.out.println("Ingrese el NOMBRE del Empleado: ");
-			nom = entrada.next();
-			if (nom.isEmpty())
-		       validaEntrada=true;
-		    else validaEntrada=false;
-		}
-		validaEntrada=true;
-		while (validaEntrada) {
-			System.out.println("Ingrese el APELLIDO del Empleado: ");
-			ape = entrada.next();
-			if (ape.isEmpty())
-		       validaEntrada=true;
-		    else validaEntrada=false;
-		}
-		
-		validaEntrada=true;
-		while (validaEntrada) {
-			System.out.println("Ingrese la DIRECCION del Empleado: ");
-			dire = entrada.next();
-			if (dire.isEmpty())
-		       validaEntrada=true;
-		    else validaEntrada=false;
-		}
-		
-		validaEntrada=true;
-		while (validaEntrada) {
-			System.out.println("Ingrese el CELULAR del Empleado: ");
-			cel = entrada.next();
-			if (cel.isEmpty())
-		       validaEntrada=true;
-		    else validaEntrada=false;
-		}
-		
-		
-		validaEntrada=true;
-		while (validaEntrada) {
-			System.out.println("Ingrese el MAIL del Empleado: ");
-			mail = entrada.next();
-			if (mail.isEmpty())
-		       validaEntrada=true;
-		    else validaEntrada=false;
-		}
+		try (Scanner entrada = new Scanner(System.in)) {
+			System.out.println();
+			boolean validaEntrada = true;
+			String cuit=" ", nom=" ",ape="",dire="",cel="",mail="",area="";
+			
+			System.out.println("*****INGRESE LOS SIGUIENTES DATOS DEL EMPLEADO*****");
+			System.out.println("***********RESPETANDO LAS INDICACIONES*************");
+			while (validaEntrada) {
+			      System.out.println("Ingrese el CUIT/DNI del Empleado: ");
+			      cuit = entrada.next();
+			      if (cuit.isEmpty())
+			       validaEntrada=true;
+			      else validaEntrada=false;
+			}
+			validaEntrada=true;
+			while (validaEntrada) {
+				System.out.println("Ingrese el NOMBRE del Empleado: ");
+				nom = entrada.next();
+				if (nom.isEmpty())
+			       validaEntrada=true;
+			    else validaEntrada=false;
+			}
+			validaEntrada=true;
+			while (validaEntrada) {
+				System.out.println("Ingrese el APELLIDO del Empleado: ");
+				ape = entrada.next();
+				if (ape.isEmpty())
+			       validaEntrada=true;
+			    else validaEntrada=false;
+			}
+			
+			validaEntrada=true;
+			while (validaEntrada) {
+				System.out.println("Ingrese la DIRECCION del Empleado: ");
+				dire = entrada.next();
+				if (dire.isEmpty())
+			       validaEntrada=true;
+			    else validaEntrada=false;
+			}
+			
+			validaEntrada=true;
+			while (validaEntrada) {
+				System.out.println("Ingrese el CELULAR del Empleado: ");
+				cel = entrada.next();
+				if (cel.isEmpty())
+			       validaEntrada=true;
+			    else validaEntrada=false;
+			}
+			
+			
+			validaEntrada=true;
+			while (validaEntrada) {
+				System.out.println("Ingrese el MAIL del Empleado: ");
+				mail = entrada.next();
+				if (mail.isEmpty())
+			       validaEntrada=true;
+			    else validaEntrada=false;
+			}
 
-		validaEntrada=true;
-		while (validaEntrada) {
-			System.out.println("Ingrese el Area(RRHH-COMERCIAL-MATENIMIENTO-TECNICO) del Empleado: ");
-			area = entrada.next();
-			if (area.isEmpty())
-		       validaEntrada=true;
-		    else validaEntrada=false;
-		}
-		
-		
-		Empleado emp1 = new Empleado(1,cuit,nom,ape,dire,cel,mail,area);
-		entrada.reset();
-		//System.out.println(emp1.toString());
+			validaEntrada=true;
+			while (validaEntrada) {
+				System.out.println("Ingrese el Area(RRHH-COMERCIAL-MATENIMIENTO-TECNICO) del Empleado: ");
+				area = entrada.next();
+				if (area.isEmpty())
+			       validaEntrada=true;
+			    else validaEntrada=false;
+			}
+			
+			
+			Empleado emp1 = new Empleado(1,cuit,nom,ape,dire,cel,mail,area);
+			entrada.reset();
+			//System.out.println(emp1.toString());
 
-		//entrada.close();
-		return emp1;
+			//entrada.close();
+			return emp1;
+		}
  	
  }
 
