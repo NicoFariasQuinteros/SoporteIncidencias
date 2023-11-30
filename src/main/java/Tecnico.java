@@ -1,13 +1,19 @@
 import java.time.LocalDate;
 import java.util.Scanner;
-
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="tecnico")
 public class Tecnico {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idTecnico;
 	private String cuitEmpleado;
 	private String codSoporte;
@@ -15,6 +21,10 @@ public class Tecnico {
 	private String dispoTecnico;//disponibilidad del tecnico, hs turno , etc
 	private final LocalDate altaTecnico = LocalDate.now();
 	private String estadoTecnico;
+
+	//@OneToMany(mappedBy = "tecnico")
+    //private List<Incidente> incidentes;
+
 
 public static Tecnico altaTecnico(){
 		try (Scanner entrada = new Scanner(System.in)) {
@@ -48,15 +58,24 @@ public static Tecnico altaTecnico(){
 			String estado = entrada.nextLine();
 			
 			
-			Tecnico tec1 = new Tecnico(1,cuitEmp,codSopo,titulo,disponibilidad,estado);
+			Tecnico tec1 = new Tecnico(cuitEmp,codSopo,titulo,disponibilidad,estado);
 				
 			//System.out.println(tec1.toString());
 
-			entrada.reset();
+			entrada.close();
 			return tec1;
 		}
 	 	
-	 }	
+	 }
+
+public Tecnico(String cuitEmp, String codSopo, String titulo, String disponibilidad, String estado) {
+	cuitEmpleado = cuitEmp;
+	codSoporte = codSopo;
+	tituloTecnico = titulo;
+	dispoTecnico = disponibilidad;
+	estadoTecnico = estado;
+}
+
 	
 	
 }

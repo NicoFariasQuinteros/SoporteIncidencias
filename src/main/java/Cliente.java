@@ -1,27 +1,42 @@
 import java.time.LocalDate;
 import java.util.Scanner;
-
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level=AccessLevel.PRIVATE)
-
+@Entity
+@Table(name="cliente")
 public class Cliente {
 
-	 int idCliente;
-	 String cuitCliente;
-	 String razonSocial;
-	 String nomCliente;
-	 String apeCliente;
-	 String direCliente;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="idcli") 
+	int idCliente;
+	@Column(name = "cuit")
+	String cuitCliente;
+	@Column(name = "razonS")
+	String razonSocial;
+	@Column(name = "nom")
+	String nomCliente;
+	@Column(name = "ape")
+	String apeCliente;
+	@Column(name = "dire")
+	String direCliente;
+	@Column(name = "cel")
 	 String celCliente;
-	 String mailCliente;
-	 final LocalDate altaCliente = LocalDate.now();
-	 String contratos;
+	@Column(name = "mail")
+	String mailCliente;
+	@Column(name = "altaCliente")
+	final LocalDate altaCliente = LocalDate.now();
+	@Column(name = "contrato")
+	String contratos;
 
 
 	
@@ -47,13 +62,27 @@ public static Cliente altaCliente() {
 			System.out.println("CONTRATO (CODIGO DEL SOPORTE): ");
 			String contrato = entrada.nextLine();
 				
-			Cliente cliente1 = new Cliente(1,cuit,razonS,nom,ape,dire,cel,mail,contrato);
+			Cliente cliente1 = new Cliente(cuit,razonS,nom,ape,dire,cel,mail,contrato);
 				
 			//System.out.println(cliente1.toString());
 
-			entrada.reset();
+			entrada.close();
 			return cliente1;
 		}
 		}
+
+
+
+public Cliente(String cuit, String razonS, String nom, String ape, String dire, String cel, String mail,
+		String contrato) {
+	cuitCliente = cuit;
+	razonSocial = razonS;
+	nomCliente = nom;
+	apeCliente = ape;
+	direCliente = dire;
+	celCliente = cel;
+	mailCliente = mail;
+	contratos = contrato;
+}
 
 }

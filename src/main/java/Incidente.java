@@ -1,12 +1,17 @@
 import java.time.LocalDate;
 import java.util.Scanner;
-
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Entity
+@Table(name="incidente")
 public class Incidente {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idIncidente;
 	private int idEmpleado;
 	private int idCliente;
@@ -16,6 +21,22 @@ public class Incidente {
 	private String fechaResolucion;
 	private String horasColchon;
 	private String estadoIncidente;
+
+	/*@ManyToOne
+    @JoinColumn(name = "idEmpleado")
+    private Empleado empleado;
+
+    @ManyToOne
+    @JoinColumn(name = "idCliente")
+    private Cliente cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "idSoporte")
+    private SoporteServicio soporte;
+
+    @ManyToOne
+    @JoinColumn(name = "idTecnico")
+    private Tecnico tecnico;*/
 	
 	public static Incidente altaIncidente(){
 		
@@ -41,13 +62,25 @@ public class Incidente {
 		String estado = "REPORTADO";
 		
 		
-		Incidente inc1 = new Incidente(1,empleado,cliente,soporte,tecnico,fechaReso,colchon,estado);
+		Incidente inc1 = new Incidente(empleado,cliente,soporte,tecnico,fechaReso,colchon,estado);
 			
 		//System.out.println(inc1.toString());
 
 		entrada.close();
 		return inc1;
 	}
+
+	public Incidente(int empleado, int cliente, int soporte, int tecnico, String fechaReso, String colchon,
+			String estado) {
+	idEmpleado = empleado;
+	idCliente = cliente;
+	idSoporte = soporte;
+	idTecnico = tecnico;
+	fechaResolucion = fechaReso;
+	horasColchon = colchon;
+	estadoIncidente = estado;
+	}
+
 	
 	
 	

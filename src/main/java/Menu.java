@@ -16,8 +16,8 @@ public class Menu {
             System.out.println("4. Listado de Técnicos");
             System.out.println("5. Salir");
             System.out.print("Opcion seleccionada: \n\n");
-            opcion = opcion_menu.next();
-            opcion_menu.reset();
+            opcion = opcion_menu.nextLine();
+           
             switch (opcion) {
                 case "1":
                     subMenuEmpleados();
@@ -53,8 +53,8 @@ public class Menu {
                 System.out.println("4. Registrar técnico");
                 System.out.println("5. Regresar al menú principal");
                 System.out.print("Indique la opcion: ");
-                opciones_empleados = opcion_menu_empleados.next();
-                opcion_menu_empleados.reset();
+                opciones_empleados = opcion_menu_empleados.nextLine();
+                
                 switch (opciones_empleados) {
                     case "1":
                         Empleado emp1 = Empleado.altaEmpleado();

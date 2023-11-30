@@ -1,330 +1,280 @@
-import java.sql.Connection;
-
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class ConexionDB {
-	private static Connection conX;
-	private static Statement sT;
+    private static EntityManagerFactory entityManagerFactory;
 
-
-  public static Connection conexionDB() {
-	
-	try {
-		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","user");
-		sT = conX.createStatement();	
-		return conX;
-		}
-    catch(Exception obj) {
-    	
-    	System.out.println("Error en la conexion de la base de dsatos"+obj);
-    	System.out.println(obj.fillInStackTrace());
+    static {
+        try {
+            entityManagerFactory = Persistence.createEntityManagerFactory("gestor");
+        } catch (Throwable ex) {
+            System.err.println("Error al inicializar la fábrica de entidades: " + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
     }
-	return null;
-    	
-  }
-  
-	  
-//***********************ALTA CLIENTE  
- public static void altaClienteDB(Cliente cli) {
-	      //validar que el cuit no exista -tambien se podria validar el contrato(codSoporte)
-	  String consulta = "insert into cliente(idCli,cuit,razonS,nom,ape,dire,cel,mail,contrato,altaCliente)"
-	  		+ " values (idCli,?,?,?,?,?,?,?,?,?)";
 
-		
-		try {
-			PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-			
-			sqlUp.setString(1, cli.getCuitCliente());
-			sqlUp.setString(2, cli.getRazonSocial());
-			sqlUp.setString(3, cli.getNomCliente());
-			sqlUp.setString(4, cli.getApeCliente());
-			sqlUp.setString(5, cli.getDireCliente());
-			sqlUp.setString(6, cli.getCelCliente());
-			sqlUp.setString(7, cli.getMailCliente());
-			sqlUp.setString(8, cli.getContratos());
-			sqlUp.setString(9, LocalDate.now().toString());
-			
-			sqlUp.executeUpdate();
-			
-			System.out.println("La DB/TABLA CLIENTE se actualizo con exito");
-			
-		} catch (SQLException obj) {
-			System.out.println("Error en el insert de la tabla cliente"+ obj);
-			obj.fillInStackTrace();
-		}
-	  
-  }
- 
- //*************ALTA EMPLEADO
- public static void altaEmpleadoDB(Empleado emp1) {
-     //validar que el cuit no exista
-	 
-    String consulta = "insert into empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
- 		+ ",celEmpleado,mailEmpleado,altaEmpleado,areaEmpleado) values (idEmpleado,?,?,?,?,?,?,?,?)";
+    public static EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
 
-	
-	try {
-		PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-		
-		sqlUp.setString(1, emp1.getCuitEmpleado());
-		sqlUp.setString(2, emp1.getNomEmpleado());
-		sqlUp.setString(3, emp1.getApeEmpleado());
-		sqlUp.setString(4, emp1.getDireEmpleado());
-		sqlUp.setString(5, emp1.getCelEmpleado());
-		sqlUp.setString(6, emp1.getMailEmpleado());
-		sqlUp.setString(7, LocalDate.now().toString());
-		sqlUp.setString(8, emp1.getAreaEmpleado());
-		
-		sqlUp.executeUpdate();
-		
-		System.out.println("La DB/TABLA EMPLEADO se actualizo con exito");
-	} catch (SQLException obj) {
-		System.out.println("Error en el insert de la tabla Empleado"+ obj);
-		obj.fillInStackTrace();
-	}
- 
-}
-//******************LISTAR SOPORTE
-public static void listarEmpleado() {
-	String consulta = "SELECT * FROM empleado";
+    public static void closeEntityManager() {
+        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
+            entityManagerFactory.close();
+        }
+    }
 
-	try {
-		ResultSet sql = sT.executeQuery(consulta);
+public static void altaClienteDB(Cliente cli) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
 
+            // Validar que el cuit no exista antes de persistir el cliente
+            // Implementa la lógica de validación aquí si es necesario
+
+            entityManager.persist(cli);
+
+            transaction.commit();
+            System.out.println("Cliente agregado exitosamente.");
+        } catch (Exception e) {
+            System.out.println("Error al agregar cliente: " + e);
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        } finally {
+            entityManager.close();
+        }
+    }
+
+	public static boolean validarCuitEmpleado(String cuitEmp) {
+        EntityManager entityManager = getEntityManager();
+        try {
+            TypedQuery<Empleado> query = entityManager.createQuery("SELECT e FROM Empleado e WHERE e.cuitEmpleado = :cuit", Empleado.class);
+            query.setParameter("cuit", cuitEmp);
+            return query.getResultList() != null;
+        } catch (Exception e) {
+            System.out.println("Error al validar el CUIT del empleado: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return false;
+    }
+
+	public static void buscarEmpleadoPorCuit(String cuit) {
+        EntityManager entityManager = getEntityManager();
+        try {
+            TypedQuery<Empleado> query = entityManager.createQuery("SELECT e FROM Empleado e WHERE e.cuitEmpleado = :cuit", Empleado.class);
+            query.setParameter("cuit", cuit);
+
+            List<Empleado> results = query.getResultList();
+            if (!results.isEmpty()) {
+                Empleado empleado = results.get(0);
+                // Imprimir los datos del empleado
+                System.out.println("Datos del Empleado con CUIT " + cuit + ":");
+                System.out.println("ID: " + empleado.getIdEmpleado());
+                System.out.println("Nombre: " + empleado.getNomEmpleado());
+                System.out.println("Apellido: " + empleado.getApeEmpleado());
+                System.out.println("Dirección: " + empleado.getDireEmpleado());
+                System.out.println("Teléfono: " + empleado.getCelEmpleado());
+                System.out.println("Correo: " + empleado.getMailEmpleado());
+                System.out.println("Alta Empleado: " + empleado.getAltaEmpleado());
+                System.out.println("Área: " + empleado.getAreaEmpleado());
+            } else {
+                System.out.println("No se encontró ningún empleado con el CUIT: " + cuit);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al buscar empleado por CUIT: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+            // Llamada al método menuPrincipal() al final de la ejecución
+            Menu.menuPrincipal();
+        }
+    }
+
+    public static void altaEmpleadoDB(Empleado emp1) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(emp1);
+            transaction.commit();
+            System.out.println("La DB/TABLA EMPLEADO se actualizó con éxito");
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.out.println("Error en el insert de la tabla Empleado: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public static List<Empleado> listarEmpleado() {
+        EntityManager entityManager = getEntityManager();
+        List<Empleado> empleados = null;
+        try {
+            TypedQuery<Empleado> query = entityManager.createQuery("SELECT e FROM Empleado e", Empleado.class);
+            empleados = query.getResultList();
+            // Imprimir los empleados obtenidos
+            imprimirEmpleados(empleados);
+        } catch (Exception e) {
+            System.out.println("Error en la consulta de empleados: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+            Menu.menuPrincipal();
+        }
+        return empleados;
+    }
+
+    public static void altaTecnicoDB(Tecnico tec1) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(tec1);
+            transaction.commit();
+            System.out.println("La DB/TABLA TECNICO se actualizó con éxito");
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.out.println("Error en el insert de la tabla Técnico: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public static List<Tecnico> listarTecnicos() {
+        EntityManager entityManager = getEntityManager();
+        List<Tecnico> tecnicos = null;
+        try {
+            TypedQuery<Tecnico> query = entityManager.createQuery("SELECT t FROM Tecnico t", Tecnico.class);
+            tecnicos = query.getResultList();
+            // Imprimir los técnicos obtenidos
+            imprimirTecnicos(tecnicos);
+        } catch (Exception e) {
+            System.out.println("Error en la consulta de técnicos: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+            Menu.menuPrincipal();
+        }
+        return tecnicos;
+    }
+
+    private static void imprimirEmpleados(List<Empleado> empleados) {
+        System.out.println("---------------------------------------------------------------");
+        System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+                "ID", "Nombre", "Apellido", "Dirección", "Teléfono", "Correo", "Alta Empleado", "Área");
+        System.out.println("---------------------------------------------------------------");
+
+        for (Empleado empleado : empleados) {
+            System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+                    empleado.getIdEmpleado(), empleado.getNomEmpleado(), empleado.getApeEmpleado(),
+                    empleado.getDireEmpleado(), empleado.getCelEmpleado(), empleado.getMailEmpleado(),
+                    empleado.getAltaEmpleado(), empleado.getAreaEmpleado());
+        }
+
+        System.out.println("---------------------------------------------------------------");
+    }
+
+    private static void imprimirTecnicos(List<Tecnico> tecnicos) {
+        System.out.println("---------------------------------------------------------------");
+        System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+                "ID", "Cuit Empleado", "Cod Soporte", "Titulo Técnico", "Disponibilidad", "Alta Técnico", "Estado Técnico");
+        System.out.println("---------------------------------------------------------------");
+
+        for (Tecnico tecnico : tecnicos) {
+            System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+                    tecnico.getIdTecnico(), tecnico.getCuitEmpleado(), tecnico.getCodSoporte(),
+                    tecnico.getTituloTecnico(), tecnico.getDispoTecnico(), tecnico.getAltaTecnico(),
+                    tecnico.getEstadoTecnico());
+        }
+
+        System.out.println("---------------------------------------------------------------");
+    }
+
+	public static void altaSoporteDB(SoporteServicio sop1) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(sop1);
+            transaction.commit();
+            System.out.println("La DB/TABLA SOPORTE se actualizó con éxito");
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.out.println("Error en el insert de la tabla SOPORTE: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public static List<SoporteServicio> listarSoporte() {
+        EntityManager entityManager = getEntityManager();
+        List<SoporteServicio> soportes = null;
+        try {
+            TypedQuery<SoporteServicio> query = entityManager.createQuery("SELECT s FROM SoporteServicio s", SoporteServicio.class);
+            soportes = query.getResultList();
+            // Imprimir los soportes obtenidos
+            imprimirSoportes(soportes);
+        } catch (Exception e) {
+            System.out.println("Error en la consulta de soportes: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+            Menu.menuPrincipal();
+        }
+        return soportes;
+    }
+
+    public static void altaIncidenteDB(Incidente inc1) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(inc1);
+            transaction.commit();
+            System.out.println("La DB/TABLA INCIDENTE se actualizó con éxito");
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.out.println("Error en el insert de la tabla Incidente: " + e);
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+	private static void imprimirSoportes(List<SoporteServicio> soportes) {
 		System.out.println("---------------------------------------------------------------");
 		System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
-				"ID", "Nombre", "Apellido", "Fecha Nac.", "Dirección", "Teléfono", "Correo", "Puesto");
+				"ID", "Cod Soporte", "Tipo Soporte", "Descripción", "Alta Soporte", "Tmp Resp Soporte", "Complejidad", "Estado");
 		System.out.println("---------------------------------------------------------------");
-
-		while (sql.next()) {
+	
+		for (SoporteServicio soporte : soportes) {
 			System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
-					sql.getInt(1), sql.getString(2), sql.getString(3),
-					sql.getString(4), sql.getString(5), sql.getString(6),
-					sql.getString(7), sql.getString(8));
+					soporte.getIdSoporte(), soporte.getCodSoporte(), soporte.getTipoSoporte(),
+					soporte.getDesSoporte(), soporte.getAltaSoporte(), soporte.getTmpRespSoporte(),
+					soporte.getComplejidadSoporte(), soporte.getEstadoSoporte());
 		}
-
+	
 		System.out.println("---------------------------------------------------------------");
-	} catch (SQLException e) {
-		System.out.println("Error en el select de la tabla EMPLEADO: " + e);
-		e.printStackTrace();
-	} finally {
-		// Llamada al método menuPrincipal() al final de la ejecución
-		Menu.menuPrincipal();
 	}
+	
+	// Resto de los métodos de altaEmpleadoDB, altaTecnicoDB, etc., siguen un enfoque similar.
 }
-
- 
-//*********************ALTA TECNICO
- public static void altaTecnicoDB(Tecnico tec1) {
- 	 
- String consulta = "insert into tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
-
-
- try {
-     PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-
-     sqlUp.setString(1, tec1.getCuitEmpleado());
-     sqlUp.setString(2, tec1.getCodSoporte());
-     sqlUp.setString(3, tec1.getTituloTecnico());
-     sqlUp.setString(4, tec1.getDispoTecnico());
-     sqlUp.setString(5, LocalDate.now().toString());
-     sqlUp.setString(6, tec1.getEstadoTecnico());
-    
-
-     sqlUp.executeUpdate();
-   
-     System.out.println("La DB/TABLA TECNICO se actualizo con exito");
-
-    } catch (SQLException obj) {
-       System.out.println("Error en el insert de la tabla tecnico"+ obj);
-          obj.fillInStackTrace();
-       }
-
-   }
-	//******************LISTAR TECNICOS
-	public static void listarTecnicos() {
-		String consulta = "SELECT * FROM tecnico";
-
-		try {
-			ResultSet sql = sT.executeQuery(consulta);
-
-			System.out.println("---------------------------------------------------------------");
-			System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
-					"ID", "Cuit Empleado", "Cod Soporte", "Titulo Técnico", "Disponibilidad", "Alta Técnico", "Estado Técnico");
-			System.out.println("---------------------------------------------------------------");
-
-			while (sql.next()) {
-				System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
-						sql.getInt(1), sql.getString(2), sql.getString(3),
-						sql.getString(4), sql.getString(5), sql.getString(6),
-						sql.getString(7));
-			}
-
-			System.out.println("---------------------------------------------------------------");
-		} catch (SQLException e) {
-			System.out.println("Error en el select de la tabla TECNICO: " + e);
-			e.printStackTrace();
-		} finally {
-			// Llamada al método menuPrincipal() al final de la ejecución
-			Menu.menuPrincipal();
-		}
-	}
-
-
-	//*********validar cuit empleado
- public static boolean validarCuitEmpleado(String cuitEmp) {
- String	consulta = String.format("select * from empleado where cuitEmpleado = %s",cuitEmp);	
-	ResultSet sql;
-	try {
-		sql = sT.executeQuery(consulta);
-		
-		while (sql.next()) {
-
-			System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4));
-			if(sql.getRow()==0) { 
-				System.out.println("El empleado no existe, INGRESE OTRO CUIT");
-				return false;
-			}	
-			else return true;
-				
-		}
-
-	}
-	
-	catch (SQLException e) {
-		System.out.println("Error en la busqueda de Empleado"+e);
-		e.printStackTrace();
-	}
-	return false;
-}
-	public static void buscarEmpleadoPorCuit(String cuit) {
-		String consulta = "SELECT * FROM empleado WHERE cuitEmpleado = ?";
-
-		try {
-			PreparedStatement sql = conX.prepareStatement(consulta);
-			sql.setString(1, cuit);
-
-			ResultSet result = sql.executeQuery();
-
-			if (result.next()) {
-				System.out.println("Datos del Empleado con CUIT " + cuit + ":");
-				System.out.println("ID: " + result.getInt("idEmpleado"));
-				System.out.println("Nombre: " + result.getString("nomEmpleado"));
-				System.out.println("Apellido: " + result.getString("apeEmpleado"));
-				System.out.println("Dirección: " + result.getString("direEmpleado"));
-				System.out.println("Teléfono: " + result.getString("celEmpleado"));
-				System.out.println("Correo: " + result.getString("mailEmpleado"));
-				System.out.println("Alta Empleado: " + result.getString("altaEmpleado"));
-				System.out.println("Área: " + result.getString("areaEmpleado"));
-			} else {
-				System.out.println("No se encontró ningún empleado con el CUIT: " + cuit);
-			}
-		} catch (SQLException e) {
-			System.out.println("Error en la búsqueda de empleado por CUIT: " + e);
-			e.printStackTrace();
-		} finally {
-			// Llamada al método menuPrincipal() al final de la ejecución
-			Menu.menuPrincipal();
-		}
-	}
-
- 
- 
-//****************ALTA SOPORTE
-public static void altaSoporteDB(SoporteServicio sop1) {
-//validad que el cuit no exista
-String consulta = "insert into soporte(idSoporte,codSoporte,tipoSoporte,desSoporte,altaSoporte,tmpRespSoporte,complejidadSoporte,estadoSoporte) values (idSoporte,?,?,?,?,?,?,?)";
-
-
-	try {
-		PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-
-		sqlUp.setString(1, sop1.getCodSoporte());
-		sqlUp.setString(2, sop1.getTipoSoporte());
-		sqlUp.setString(3, sop1.getDesSoporte());
-		sqlUp.setString(4, LocalDate.now().toString());
-		sqlUp.setString(5, sop1.getTmpRespSoporte());
-		sqlUp.setString(6, sop1.getComplejidadSoporte());
-		sqlUp.setString(7, sop1.getEstadoSoporte());
-
-
-		sqlUp.executeUpdate();
-
-
-		System.out.println("La DB/TABLA SOPORTE se actualizo con exito");
-		
-	} catch (SQLException obj) {
-		System.out.println("Error en el insert de la tabla SOPORTE"+ obj);
-		obj.fillInStackTrace();
-	}
-
-}
-//******************LISTAR SOPORTE
-public static void listarSoporte() {
-
-	
-	String consulta = "select * from soporte";
-
-	ResultSet sql;
-	try {
-		sql = sT.executeQuery(consulta);
-		System.out.println("campos soporte agregar y dejar bonito");
-	 	while (sql.next()) {
-		
-	 		System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4)+"\t"+sql.getString(5)+"\t"+sql.getString(6)+"\t"+sql.getString(7)+"\t"+sql.getString(8));
-		
-	 	}
-		
-	} catch (SQLException e) {
-		System.out.println("Error en el INSERT de la tabla SOPORTE"+ e);
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-
-
- }
-
-
-//**********************ALTA INCIDENTE
-public static void altaIncidenteDB(Incidente inc1) {
-
-	
-	String consulta = "insert into incidente(idIncidente,idEmpleado,idCliente,idSoporte,idTecnico,altaIncidente,fechaResolucion,horaColchon,estadoIncidente)"
-			+ " values (idIncidente,?,?,?,?,?,?,?,?)";
-	
-	
-	try {
-			PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-			
-			sqlUp.setInt(1, inc1.getIdEmpleado());
-			sqlUp.setInt(2, inc1.getIdCliente());
-			sqlUp.setInt(3, inc1.getIdSoporte());
-			sqlUp.setInt(4, inc1.getIdTecnico());
-			sqlUp.setString(5,LocalDate.now().toString() );
-			sqlUp.setString(6,inc1.getFechaResolucion());
-			sqlUp.setString(7,inc1.getHorasColchon());
-			sqlUp.setString(8,inc1.getEstadoIncidente());
-			
-			
-			sqlUp.executeUpdate();
-			
-			System.out.println("La DB/TABLA INCIDENTE se actualizo con exito");
-			
-		} catch (SQLException obj) {
-			System.out.println("Error en el insert de la tabla Incidente"+ obj);
-			obj.fillInStackTrace();
-		}
-		
-	}
-
-
-
-}
-
 
 

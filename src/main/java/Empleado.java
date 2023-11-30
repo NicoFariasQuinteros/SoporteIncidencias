@@ -1,15 +1,22 @@
 import java.time.LocalDate;
 import java.util.Scanner;
-
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name="empleado")
 public class Empleado {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	 int idEmpleado;
 	 String cuitEmpleado;
 	 String nomEmpleado;
@@ -30,7 +37,8 @@ public class Empleado {
 			System.out.println("***********RESPETANDO LAS INDICACIONES*************");
 			while (validaEntrada) {
 			      System.out.println("Ingrese el CUIT/DNI del Empleado: ");
-			      cuit = entrada.next();
+			      cuit = entrada.nextLine();
+					System.out.println(cuit);
 			      if (cuit.isEmpty())
 			       validaEntrada=true;
 			      else validaEntrada=false;
@@ -38,7 +46,7 @@ public class Empleado {
 			validaEntrada=true;
 			while (validaEntrada) {
 				System.out.println("Ingrese el NOMBRE del Empleado: ");
-				nom = entrada.next();
+				nom = entrada.nextLine();
 				if (nom.isEmpty())
 			       validaEntrada=true;
 			    else validaEntrada=false;
@@ -46,7 +54,7 @@ public class Empleado {
 			validaEntrada=true;
 			while (validaEntrada) {
 				System.out.println("Ingrese el APELLIDO del Empleado: ");
-				ape = entrada.next();
+				ape = entrada.nextLine();
 				if (ape.isEmpty())
 			       validaEntrada=true;
 			    else validaEntrada=false;
@@ -55,7 +63,7 @@ public class Empleado {
 			validaEntrada=true;
 			while (validaEntrada) {
 				System.out.println("Ingrese la DIRECCION del Empleado: ");
-				dire = entrada.next();
+				dire = entrada.nextLine();
 				if (dire.isEmpty())
 			       validaEntrada=true;
 			    else validaEntrada=false;
@@ -64,7 +72,7 @@ public class Empleado {
 			validaEntrada=true;
 			while (validaEntrada) {
 				System.out.println("Ingrese el CELULAR del Empleado: ");
-				cel = entrada.next();
+				cel = entrada.nextLine();
 				if (cel.isEmpty())
 			       validaEntrada=true;
 			    else validaEntrada=false;
@@ -74,7 +82,7 @@ public class Empleado {
 			validaEntrada=true;
 			while (validaEntrada) {
 				System.out.println("Ingrese el MAIL del Empleado: ");
-				mail = entrada.next();
+				mail = entrada.nextLine();
 				if (mail.isEmpty())
 			       validaEntrada=true;
 			    else validaEntrada=false;
@@ -83,21 +91,31 @@ public class Empleado {
 			validaEntrada=true;
 			while (validaEntrada) {
 				System.out.println("Ingrese el Area(RRHH-COMERCIAL-MATENIMIENTO-TECNICO) del Empleado: ");
-				area = entrada.next();
+				area = entrada.nextLine();
 				if (area.isEmpty())
 			       validaEntrada=true;
 			    else validaEntrada=false;
 			}
 			
 			
-			Empleado emp1 = new Empleado(1,cuit,nom,ape,dire,cel,mail,area);
-			entrada.reset();
+			Empleado emp1 = new Empleado(cuit,nom,ape,dire,cel,mail,area);
+			
 			//System.out.println(emp1.toString());
-
-			//entrada.close();
+			
 			return emp1;
 		}
  	
  }
+
+public Empleado(String cuit, String nom, String ape, String dire, String cel, String mail, String area) {
+	
+	cuitEmpleado = cuit;
+	nomEmpleado = nom;
+	apeEmpleado = ape;
+	direEmpleado = dire;
+	celEmpleado = cel;
+	mailEmpleado = mail;
+	areaEmpleado = area;
+}
 
 }
