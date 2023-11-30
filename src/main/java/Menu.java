@@ -21,6 +21,9 @@ public class Menu {
             switch (opcion) {
                 case "1":
                     subMenuEmpleados();
+                    if (!opcion_menu.hasNextLine()) {
+                    opcion_menu.nextLine();
+                   }
                     break;
                 case "2":
                     Cliente cli1 = Cliente.altaCliente();
@@ -34,7 +37,9 @@ public class Menu {
                     
                     ConexionDB.listarTecnicos();
                     break;
-
+                default:
+                    System.out.println("Opción no valida o inexistente");
+                
             }
         } while (!opcion.equals("5"));
         opcion_menu.close();
@@ -51,7 +56,10 @@ public class Menu {
                 System.out.println("2. Ver lista de empleados");
                 System.out.println("3. Buscar empleado por CUIT");
                 System.out.println("4. Registrar técnico");
-                System.out.println("5. Regresar al menú principal");
+                System.out.println("5. Eliminar empleado");
+                System.out.println("6. Actualizar empleado");
+
+                System.out.println("7. volver");
                 System.out.print("Indique la opcion: ");
                 opciones_empleados = opcion_menu_empleados.nextLine();
                 
@@ -65,8 +73,8 @@ public class Menu {
                         break;
                     case "3":
                         System.out.print("Ingrese el CUIT del empleado a buscar: ");
-                        opcion_menu_empleados.nextLine(); // Consumir el salto de línea pendiente
                         String cuitBusqueda = opcion_menu_empleados.nextLine();
+                        //System.out.println(cuitBusqueda);
                         ConexionDB.buscarEmpleadoPorCuit(cuitBusqueda);
                         break;
                     case "4":
@@ -74,13 +82,30 @@ public class Menu {
                         ConexionDB.altaTecnicoDB(tec1);
                         break;
                     case "5":
-                        menuPrincipal();
+                        System.out.print("Ingrese el CUIT del empleado a buscar: ");
+                        String cuit = opcion_menu_empleados.nextLine();
+                        int id = ConexionDB.buscarEmpleadoPorCuit(cuit);
+                        ConexionDB.eliminarEmpleado(id);  
+                        break;
+                    case "6":
+                        System.out.print("Ingrese el CUIT del empleado a buscar: ");
+                        String cuitE = opcion_menu_empleados.nextLine();
+                        int idE = ConexionDB.buscarEmpleadoPorCuit(cuitE);
+                        Empleado emp2 = Empleado.altaEmpleado();
+                        emp2.setIdEmpleado(idE);
+                        ConexionDB.actualizarEmpleado(emp2);  
+                        break;
+                    case "7":
                         break;
                     default:
                     System.out.println("Opción no valida o inexistente");
                     }
                 
-                   } while (!opciones_empleados.equals("5")) ;
+                   } while (!opciones_empleados.equals("7")) ;
+                   if (!opcion_menu_empleados.hasNextLine()) {
+                    opcion_menu_empleados.nextLine();
+                   }
+                   opcion_menu_empleados.close();
                 } catch (InputMismatchException e) {
                     System.out.println("Entrada inválida. Por favor, ingrese un número correspondiente a una opción.");
                 }

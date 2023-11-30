@@ -26,7 +26,7 @@ public class ConexionDB {
             entityManagerFactory.close();
         }
     }
-
+//****** cliente
 public static void altaClienteDB(Cliente cli) {
         EntityManager entityManager = getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -50,6 +50,7 @@ public static void altaClienteDB(Cliente cli) {
         }
     }
 
+    /***** empleado */
 	public static boolean validarCuitEmpleado(String cuitEmp) {
         EntityManager entityManager = getEntityManager();
         try {
@@ -65,11 +66,13 @@ public static void altaClienteDB(Cliente cli) {
         return false;
     }
 
-	public static void buscarEmpleadoPorCuit(String cuit) {
+	public static int buscarEmpleadoPorCuit(String cuit) {
         EntityManager entityManager = getEntityManager();
+        int id=0;
         try {
-            TypedQuery<Empleado> query = entityManager.createQuery("SELECT e FROM Empleado e WHERE e.cuitEmpleado = :cuit", Empleado.class);
+            TypedQuery<Empleado> query = entityManager.createQuery("SELECT e FROM Empleado e WHERE e.cuitEmpleado = TRIM(:cuit)", Empleado.class);
             query.setParameter("cuit", cuit);
+            System.out.println(cuit);
 
             List<Empleado> results = query.getResultList();
             if (!results.isEmpty()) {
@@ -84,6 +87,7 @@ public static void altaClienteDB(Cliente cli) {
                 System.out.println("Correo: " + empleado.getMailEmpleado());
                 System.out.println("Alta Empleado: " + empleado.getAltaEmpleado());
                 System.out.println("Área: " + empleado.getAreaEmpleado());
+                id = empleado.getIdEmpleado();
             } else {
                 System.out.println("No se encontró ningún empleado con el CUIT: " + cuit);
             }
@@ -92,9 +96,8 @@ public static void altaClienteDB(Cliente cli) {
             e.printStackTrace();
         } finally {
             entityManager.close();
-            // Llamada al método menuPrincipal() al final de la ejecución
-            Menu.menuPrincipal();
         }
+        return id;
     }
 
     public static void altaEmpleadoDB(Empleado emp1) {
@@ -133,7 +136,66 @@ public static void altaClienteDB(Cliente cli) {
         }
         return empleados;
     }
+    public static void actualizarEmpleado(Empleado empleado) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+    
+        try {
+            transaction.begin();
+            entityManager.merge(empleado);
+            transaction.commit();
+            System.out.println("ACTIALIZACION EXITOSA");
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
 
+    public static void eliminarEmpleado(int empleadoId) {
+
+
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+    
+        try {
+            transaction.begin();
+            Empleado empleado = entityManager.find(Empleado.class, empleadoId);
+            if (empleado != null) {
+                entityManager.remove(empleado);
+                System.out.println("BORRADO EXiTOSO");
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
+    public Empleado obtenerEmpleadoPorId(int empleadoId) {
+        EntityManager entityManager = getEntityManager();
+        Empleado empleado = null;
+    
+        try {
+            empleado = entityManager.find(Empleado.class, empleadoId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    
+        return empleado;
+    }
+    
+/***** Tecnico */
     public static void altaTecnicoDB(Tecnico tec1) {
         EntityManager entityManager = getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
