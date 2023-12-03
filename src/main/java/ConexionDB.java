@@ -6,39 +6,40 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.Locale;
 
 public class ConexionDB {
 	private static Connection conX;
 	private static Statement sT;
 
 
-  public static Connection conexionDB() {
-	
-	try {
-		conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","");
-		sT = conX.createStatement();	
-		return conX;
-		}
-    catch(Exception obj) {
-    	
-    	System.out.println("Error en la conexion de la base de dsatos"+obj);
-    	System.out.println(obj.fillInStackTrace());
-    }
-	return null;
-    	
-  }
-  
-	  
-//***********************ALTA CLIENTE  
- public static void altaClienteDB(Cliente cli) {
-	      //validar que el cuit no exista -tambien se podria validar el contrato(codSoporte)
-	  String consulta = "insert into cliente(idCli,cuit,razonS,nom,ape,dire,cel,mail,contrato,altaCliente)"
-	  		+ " values (idCli,?,?,?,?,?,?,?,?,?)";
+	public static Connection conexionDB() {
 
-		
 		try {
-			PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-			
+			conX = DriverManager.getConnection("jdbc:mysql://localhost:3306/db-soporte-incidente","root","user");
+			sT = conX.createStatement();
+			return conX;
+		}
+		catch(Exception obj) {
+
+			System.out.println("Error en la conexion de la base de dsatos"+obj);
+			System.out.println(obj.fillInStackTrace());
+		}
+		return null;
+
+	}
+
+
+	//***********************ALTA CLIENTE
+	public static void altaClienteDB(Cliente cli) {
+		//validar que el cuit no exista -tambien se podria validar el contrato(codSoporte)
+		String consulta = "insert into cliente(idCli,cuit,razonS,nom,ape,dire,cel,mail,contrato,altaCliente)"
+				+ " values (idCli,?,?,?,?,?,?,?,?,?)";
+
+
+		try {
+			PreparedStatement sqlUp = conX.prepareStatement(consulta);
+
 			sqlUp.setString(1, cli.getCuitCliente());
 			sqlUp.setString(2, cli.getRazonSocial());
 			sqlUp.setString(3, cli.getNomCliente());
@@ -48,220 +49,286 @@ public class ConexionDB {
 			sqlUp.setString(7, cli.getMailCliente());
 			sqlUp.setString(8, cli.getContratos());
 			sqlUp.setString(9, LocalDate.now().toString());
-			
+
 			sqlUp.executeUpdate();
-			
+
 			System.out.println("La DB/TABLA CLIENTE se actualizo con exito");
-			
+
 		} catch (SQLException obj) {
-			System.out.println("Error en el insert de la tabla Cliente"+ obj);
+			System.out.println("Error en el insert de la tabla cliente"+ obj);
 			obj.fillInStackTrace();
 		}
-	  
-  }
- 
- //*************ALTA EMPLEADO
- public static void altaEmpleadoDB(Empleado emp1) {
-     //validar que el cuit no exista
-	 
-    String consulta = "insert into Empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
- 		+ ",celEmpleado,mailEmpleado,altaEmpleado,areaEmpleado) values (idEmpleado,?,?,?,?,?,?,?,?)";
 
-	
-	try {
-		PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-		
-		sqlUp.setString(1, emp1.getCuitEmpleado());
-		sqlUp.setString(2, emp1.getNomEmpleado());
-		sqlUp.setString(3, emp1.getApeEmpleado());
-		sqlUp.setString(4, emp1.getDireEmpleado());
-		sqlUp.setString(5, emp1.getCelEmpleado());
-		sqlUp.setString(6, emp1.getMailEmpleado());
-		sqlUp.setString(7, LocalDate.now().toString());
-		sqlUp.setString(8, emp1.getAreaEmpleado());
-		
-		sqlUp.executeUpdate();
-		
-		System.out.println("La DB/TABLA EMPLEADO se actualizo con exito");
-	} catch (SQLException obj) {
-		System.out.println("Error en el insert de la tabla Empleado"+ obj);
-		obj.fillInStackTrace();
 	}
- 
-}
-//******************LISTAR SOPORTE
-public static void listarEmpleado() {
 
-	
-	String consulta = "select * from empleado";
+	//*************ALTA EMPLEADO
+	public static void altaEmpleadoDB(Empleado emp1) {
+		//validar que el cuit no exista
 
-	ResultSet sql;
-	try {
-		sql = sT.executeQuery(consulta);
-		System.out.println("campos EMPELADO agregar y dejar bonito");
-	 	while (sql.next()) {
-		
-	 		System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+
-	 				"\t"+sql.getString(4)+sql.getString(5)+"\t"+sql.getString(6)+sql.getString(7)+"\t"+sql.getString(8));
-		
-	 	}
-		
-	} catch (SQLException e) {
-		System.out.println("Error en el select de la tabla EMPLEADO"+ e);
-		e.printStackTrace();
-	} 
-}	
- 
-//*********************ALTA TECNICO
- public static void altaTecnicoDB(Tecnico tec1) {
- 	 
- String consulta = "insert into Tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
+		String consulta = "insert into empleado(idEmpleado,cuitEmpleado,nomEmpleado,apeEmpleado,direEmpleado"
+				+ ",celEmpleado,mailEmpleado,altaEmpleado,areaEmpleado) values (idEmpleado,?,?,?,?,?,?,?,?)";
 
 
- try {
-     PreparedStatement sqlUp = conX.prepareStatement(consulta);		
+		try {
+			PreparedStatement sqlUp = conX.prepareStatement(consulta);
 
-     sqlUp.setString(1, tec1.getCuitEmpleado());
-     sqlUp.setString(2, tec1.getCodSoporte());
-     sqlUp.setString(3, tec1.getTituloTecnico());
-     sqlUp.setString(4, tec1.getDispoTecnico());
-     sqlUp.setString(5, LocalDate.now().toString());
-     sqlUp.setString(6, tec1.getEstadoTecnico());
-    
+			sqlUp.setString(1, emp1.getCuitEmpleado());
+			sqlUp.setString(2, emp1.getNomEmpleado());
+			sqlUp.setString(3, emp1.getApeEmpleado());
+			sqlUp.setString(4, emp1.getDireEmpleado());
+			sqlUp.setString(5, emp1.getCelEmpleado());
+			sqlUp.setString(6, emp1.getMailEmpleado());
+			sqlUp.setString(7, LocalDate.now().toString());
+			sqlUp.setString(8, emp1.getAreaEmpleado());
 
-     sqlUp.executeUpdate();
-   
-     System.out.println("La DB/TABLA TECNICO se actualizo con exito");
+			sqlUp.executeUpdate();
 
-    } catch (SQLException obj) {
-       System.out.println("Error en el insert de la tabla Tecnico"+ obj);
-          obj.fillInStackTrace();
-       }
-
-   }
- 
- //*********validar cuit empleado
- public static boolean validarCuitEmpleado(String cuitEmp) {
- String	consulta = String.format("select * from empleado where cuitEmpleado = %s",cuitEmp);	
-	ResultSet sql;
-	boolean resultado=false;
-
-	try {
-		sql = sT.executeQuery(consulta);
-		int id=0;
-		String nom=" ", ape=" ";
-		
-		while (sql.next()) {
-			
-			id = sql.getInt(1);
-			nom = sql.getString(3);
-			ape = sql.getString(4);
-			System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4));
-			if(sql.getRow()==0) { 
-				System.out.println("El empleado no existe, INGRESE OTRO CUIT");
-				return resultado = false;
-			}	
-			else return resultado = true;
-				
+			System.out.println("La DB/TABLA EMPLEADO se actualizo con exito");
+		} catch (SQLException obj) {
+			System.out.println("Error en el insert de la tabla Empleado"+ obj);
+			obj.fillInStackTrace();
 		}
 
 	}
-	
-	catch (SQLException e) {
-		System.out.println("Error en la busqueda de Empleado"+e);
-		e.printStackTrace();
+	//******************LISTAR SOPORTE
+	public static void listarEmpleado() {
+		String consulta = "SELECT * FROM empleado";
+
+		try {
+			ResultSet sql = sT.executeQuery(consulta);
+
+			System.out.println("---------------------------------------------------------------");
+			System.out.printf("| %-5s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+					"ID", "Nombre", "Apellido", "Fecha Nac.", "Dirección", "Teléfono", "Correo", "Puesto");
+			System.out.println("---------------------------------------------------------------");
+
+			while (sql.next()) {
+				System.out.printf("| %-5d | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n",
+						sql.getInt(1), sql.getString(2), sql.getString(3),
+						sql.getString(4), sql.getString(5), sql.getString(6),
+						sql.getString(7), sql.getString(8));
+			}
+
+			System.out.println("---------------------------------------------------------------");
+		} catch (SQLException e) {
+			System.out.println("Error en el select de la tabla EMPLEADO: " + e);
+			e.printStackTrace();
+		} finally {
+			// Llamada al método menuPrincipal() al final de la ejecución
+			Menu.menuPrincipal();
+		}
 	}
-	return false;
-}
- 
- 
- 
-//****************ALTA SOPORTE
-public static void altaSoporteDB(SoporteServicio sop1) {
+
+
+	//*********************ALTA TECNICO
+	public static void altaTecnicoDB(Tecnico tec1) {
+
+		String consulta = "insert into tecnico(idTecnico,cuitEmpleado,codSoporte,tituloTecnico,dispoTecnico,altaTecnico,estadoTecnico) values (idTecnico,?,?,?,?,?,?)";
+
+
+		try {
+			PreparedStatement sqlUp = conX.prepareStatement(consulta);
+
+			sqlUp.setString(1, tec1.getCuitEmpleado());
+			sqlUp.setString(2, tec1.getCodSoporte());
+			sqlUp.setString(3, tec1.getTituloTecnico());
+			sqlUp.setString(4, tec1.getDispoTecnico());
+			sqlUp.setString(5, LocalDate.now().toString());
+			sqlUp.setString(6, tec1.getEstadoTecnico());
+
+
+			sqlUp.executeUpdate();
+
+			System.out.println("La DB/TABLA TECNICO se actualizo con exito");
+
+		} catch (SQLException obj) {
+			System.out.println("Error en el insert de la tabla tecnico"+ obj);
+			obj.fillInStackTrace();
+		}
+
+	}
+	//******************LISTAR TECNICOS
+	public static void listarTecnicos() {
+		String consulta = "SELECT * FROM tecnico";
+
+		try {
+			ResultSet sql = sT.executeQuery(consulta);
+
+			System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+			System.out.printf("| %-5s | %-15s | %-15s | %-20s | %-17s | %-15s | %-15s |\n",
+					"ID", "Cuit Empleado", "Cod Soporte", "Titulo Técnico", "Disponibilidad", "Alta Técnico", "Estado Técnico");
+			System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+			while (sql.next()) {
+				System.out.printf("| %-5d | %-15s | %-15s | %-20s | %-17s | %-15s | %-15s |\n",
+						sql.getInt(1), sql.getString(2), sql.getString(3),
+						sql.getString(4).toUpperCase(), sql.getString(5).toUpperCase(), sql.getString(6),
+						sql.getString(7).toUpperCase());
+			}
+
+			System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+		} catch (SQLException e) {
+			System.out.println("Error en el select de la tabla TECNICO: " + e);
+			e.printStackTrace();
+		} finally {
+			// Llamada al método menuPrincipal() al final de la ejecución
+			Menu.menuPrincipal();
+		}
+	}
+
+
+	//*********validar cuit empleado
+	public static boolean validarCuitEmpleado(String cuitEmp) {
+		String	consulta = String.format("select * from empleado where cuitEmpleado = %s",cuitEmp);
+		ResultSet sql;
+		boolean resultado=false;
+
+		try {
+			sql = sT.executeQuery(consulta);
+			int id=0;
+			String nom=" ", ape=" ";
+
+			while (sql.next()) {
+
+				id = sql.getInt(1);
+				nom = sql.getString(3);
+				ape = sql.getString(4);
+				System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4));
+				if(sql.getRow()==0) {
+					System.out.println("El empleado no existe, INGRESE OTRO CUIT");
+					return resultado = false;
+				}
+				else return resultado = true;
+
+			}
+
+		}
+
+		catch (SQLException e) {
+			System.out.println("Error en la busqueda de Empleado"+e);
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public static void buscarEmpleadoPorCuit(String cuit) {
+		String consulta = "SELECT * FROM empleado WHERE cuitEmpleado = ?";
+
+		try {
+			PreparedStatement sql = conX.prepareStatement(consulta);
+			sql.setString(1, cuit);
+
+			ResultSet result = sql.executeQuery();
+
+			if (result.next()) {
+				System.out.println("Datos del Empleado con CUIT " + cuit + ":");
+				System.out.println("ID: " + result.getInt("idEmpleado"));
+				System.out.println("Nombre: " + result.getString("nomEmpleado"));
+				System.out.println("Apellido: " + result.getString("apeEmpleado"));
+				System.out.println("Dirección: " + result.getString("direEmpleado"));
+				System.out.println("Teléfono: " + result.getString("celEmpleado"));
+				System.out.println("Correo: " + result.getString("mailEmpleado"));
+				System.out.println("Alta Empleado: " + result.getString("altaEmpleado"));
+				System.out.println("Área: " + result.getString("areaEmpleado"));
+			} else {
+				System.out.println("No se encontró ningún empleado con el CUIT: " + cuit +"\n");
+			}
+		} catch (SQLException e) {
+			System.out.println("Error en la búsqueda de empleado por CUIT: " + e);
+			e.printStackTrace();
+		} finally {
+			// Llamada al método menuPrincipal() al final de la ejecución
+			Menu.menuPrincipal();
+		}
+	}
+
+
+
+	//****************ALTA SOPORTE
+	public static void altaSoporteDB(SoporteServicio sop1) {
 //validad que el cuit no exista
-String consulta = "insert into soporte(idSoporte,codSoporte,tipoSoporte,desSoporte,altaSoporte,tmpRespSoporte,complejidadSoporte,estadoSoporte) values (idSoporte,?,?,?,?,?,?,?)";
+		String consulta = "insert into soporte(idSoporte,codSoporte,tipoSoporte,desSoporte,altaSoporte,tmpRespSoporte,complejidadSoporte,estadoSoporte) values (idSoporte,?,?,?,?,?,?,?)";
 
 
-	try {
-		PreparedStatement sqlUp = conX.prepareStatement(consulta);		
+		try {
+			PreparedStatement sqlUp = conX.prepareStatement(consulta);
 
-		sqlUp.setString(1, sop1.getCodSoporte());
-		sqlUp.setString(2, sop1.getTipoSoporte());
-		sqlUp.setString(3, sop1.getDesSoporte());
-		sqlUp.setString(4, LocalDate.now().toString());
-		sqlUp.setString(5, sop1.getTmpRespSoporte());
-		sqlUp.setString(6, sop1.getComplejidadSoporte());
-		sqlUp.setString(7, sop1.getEstadoSoporte());
-
-
-		sqlUp.executeUpdate();
+			sqlUp.setString(1, sop1.getCodSoporte());
+			sqlUp.setString(2, sop1.getTipoSoporte());
+			sqlUp.setString(3, sop1.getDesSoporte());
+			sqlUp.setString(4, LocalDate.now().toString());
+			sqlUp.setString(5, sop1.getTmpRespSoporte());
+			sqlUp.setString(6, sop1.getComplejidadSoporte());
+			sqlUp.setString(7, sop1.getEstadoSoporte());
 
 
-		System.out.println("La DB/TABLA SOPORTE se actualizo con exito");
-		
-	} catch (SQLException obj) {
-		System.out.println("Error en el insert de la tabla SOPORTE"+ obj);
-		obj.fillInStackTrace();
+			sqlUp.executeUpdate();
+
+
+			System.out.println("La DB/TABLA SOPORTE se actualizo con exito");
+
+		} catch (SQLException obj) {
+			System.out.println("Error en el insert de la tabla SOPORTE"+ obj);
+			obj.fillInStackTrace();
+		}
+
+	}
+	//******************LISTAR SOPORTE
+	public static void listarSoporte() {
+
+
+		String consulta = "select * from soporte";
+
+		ResultSet sql;
+		try {
+			sql = sT.executeQuery(consulta);
+			System.out.println("campos soporte agregar y dejar bonito");
+			while (sql.next()) {
+
+				System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4)+"\t"+sql.getString(5)+"\t"+sql.getString(6)+"\t"+sql.getString(7)+"\t"+sql.getString(8));
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Error en el INSERT de la tabla SOPORTE"+ e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
 	}
 
-}
-//******************LISTAR SOPORTE
-public static void listarSoporte() {
 
-	
-	String consulta = "select * from SOPORTE";
+	//**********************ALTA INCIDENTE
+	public static void altaIncidenteDB(Incidente inc1) {
 
-	ResultSet sql;
-	try {
-		sql = sT.executeQuery(consulta);
-		System.out.println("campos soporte agregar y dejar bonito");
-	 	while (sql.next()) {
-		
-	 		System.out.println(sql.getInt(1)+"\t"+sql.getString(2)+"\t"+sql.getString(3)+"\t"+sql.getString(4)+sql.getString(5)+"\t"+sql.getString(6)+sql.getString(7)+"\t"+sql.getString(8));
-		
-	 	}
-		
-	} catch (SQLException e) {
-		System.out.println("Error en el INSERT de la tabla SOPORTE"+ e);
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+
+		String consulta = "insert into incidente(idIncidente,idEmpleado,idCliente,idSoporte,idTecnico,altaIncidente,fechaResolucion,horaColchon,estadoIncidente)"
+				+ " values (idIncidente,?,?,?,?,?,?,?,?)";
+
+
+		try {
+			PreparedStatement sqlUp = conX.prepareStatement(consulta);
+
+			sqlUp.setInt(1, inc1.getIdEmpleado());
+			sqlUp.setInt(2, inc1.getIdCliente());
+			sqlUp.setInt(3, inc1.getIdSoporte());
+			sqlUp.setInt(4, inc1.getIdTecnico());
+			sqlUp.setString(5,LocalDate.now().toString() );
+			sqlUp.setString(6,inc1.getFechaResolucion());
+			sqlUp.setString(7,inc1.getHorasColchon());
+			sqlUp.setString(8,inc1.getEstadoIncidente());
+
+
+			sqlUp.executeUpdate();
+
+			System.out.println("La DB/TABLA INCIDENTE se actualizo con exito");
+
+		} catch (SQLException obj) {
+			System.out.println("Error en el insert de la tabla Incidente"+ obj);
+			obj.fillInStackTrace();
+		}
+
 	}
-
-
- }
-
-
-//**********************ALTA INCIDENTE
-public static void altaIncidenteDB(Incidente inc1) {
-
-	
-String consulta = "insert into incidente(idIncidente,idEmpleado,idCliente,idSoporte,idTecnico,altaIncidente,fechaResolucion,horaColchon,estadoIncidente)"
-		+ " values (idIncidente,?,?,?,?,?,?,?,?)";
-
-
-try {
-PreparedStatement sqlUp = conX.prepareStatement(consulta);		
-
-sqlUp.setInt(1, inc1.getIdEmpleado());
-sqlUp.setInt(2, inc1.getIdCliente());
-sqlUp.setInt(3, inc1.getIdSoporte());
-sqlUp.setInt(4, inc1.getIdTecnico());
-sqlUp.setString(5,LocalDate.now().toString() );
-sqlUp.setString(6,inc1.getFechaResolucion());
-sqlUp.setString(7,inc1.getHorasColchon());
-sqlUp.setString(8,inc1.getEstadoIncidente());
-
-
-sqlUp.executeUpdate();
-
-System.out.println("La DB/TABLA INCIDENTE se actualizo con exito");
-
-} catch (SQLException obj) {
-System.out.println("Error en el insert de la tabla Incidente"+ obj);
-obj.fillInStackTrace();
-}
-
-}
 
 
 

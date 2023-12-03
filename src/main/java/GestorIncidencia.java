@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class GestorIncidencia {
 
     public static void main(String[] args) {
-		ConexionDB.conexionDB();
+        ConexionDB.conexionDB();
         Menu.menuPrincipal();
 
 
@@ -17,4 +17,4 @@ public class GestorIncidencia {
     }
 
 }
-	
+

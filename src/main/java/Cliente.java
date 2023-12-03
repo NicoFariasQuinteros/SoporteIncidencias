@@ -15,22 +15,22 @@ import lombok.experimental.FieldDefaults;
 
 public class Cliente {
 
-	 int idCliente;
-	 String cuitCliente;
-	 String razonSocial;
-	 String nomCliente;
-	 String apeCliente;
-	 String direCliente;
-	 String    celCliente;
-	 String mailCliente;
-	 final LocalDate altaCliente = LocalDate.now();
-	 String contratos;
+	int idCliente;
+	String cuitCliente;
+	String razonSocial;
+	String nomCliente;
+	String apeCliente;
+	String direCliente;
+	String    celCliente;
+	String mailCliente;
+	final LocalDate altaCliente = LocalDate.now();
+	String contratos;
 
 
-	
-public static Cliente altaCliente() {
-	System.out.println("\n*****INGRESE LOS SIGUIENTES DATOS DEL CLIENTE*****");
-    System.out.println("***********RESPETANDO LAS INDICACIONES*************");
+
+	public static Cliente altaCliente() {
+		System.out.println("\n*****INGRESE LOS SIGUIENTES DATOS DEL CLIENTE*****");
+		System.out.println("***********RESPETANDO LAS INDICACIONES*************");
 		Scanner entrada = new Scanner(System.in);
 		System.out.println("CUIT: ");
 		String cuit = entrada.nextLine();
@@ -49,13 +49,13 @@ public static Cliente altaCliente() {
 		System.out.println();
 		System.out.println("CONTRATO (CODIGO DEL SOPORTE): ");
 		String contrato = entrada.nextLine();
-			
+
 		Cliente cliente1 = new Cliente(1,cuit,razonS,nom,ape,dire,cel,mail,contrato);
-			
+
 		//System.out.println(cliente1.toString());
 
-		entrada.close();
+		entrada.reset();
 		return cliente1;
-		}
+	}
 
 }

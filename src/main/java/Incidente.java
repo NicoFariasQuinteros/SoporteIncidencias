@@ -16,11 +16,11 @@ public class Incidente {
 	private String fechaResolucion;
 	private String horasColchon;
 	private String estadoIncidente;
-	
+
 	public static Incidente altaIncidente(){
-		
+
 		System.out.println("*****INGRESE LOS SIGUIENTES DATOS DEL INCIDENTE*****");
-	    System.out.println("***********RESPETANDO LAS INDICACIONES*************");
+		System.out.println("***********RESPETANDO LAS INDICACIONES*************");
 		Scanner entrada = new Scanner(System.in);
 		System.out.println();
 		System.out.println("ID Empleado: ");
@@ -39,17 +39,17 @@ public class Incidente {
 
 		//en alta de incidente el estado por defecto será REPORTADO
 		String estado = "REPORTADO";
-		
-		
+
+
 		Incidente inc1 = new Incidente(1,empleado,cliente,soporte,tecnico,fechaReso,colchon,estado);
-			
+
 		//System.out.println(inc1.toString());
 
 		entrada.close();
 		return inc1;
 	}
-	
-	
-	
-	
+
+
+
+
 }
